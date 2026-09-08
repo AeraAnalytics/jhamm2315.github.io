@@ -5,6 +5,19 @@ may discover development, service, product, government, and fulfillment opportun
 every model-produced result remains an **unverified candidate**. Aera does not purchase,
 file, sign, contact, or certify anything.
 
+## CEO headquarters frontend
+
+The repository root contains a dependency-free, responsive operations dashboard for CEO
+Justynn Hammond. It can be published directly with GitHub Pages or previewed locally:
+
+```bash
+python -m http.server 4173
+```
+
+Open <http://localhost:4173>. The current interface is a frontend prototype with local UI
+interactions; its company metrics and directives are demonstration data until connected to
+the owner API.
+
 ## Quick start
 
 Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
