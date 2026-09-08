@@ -1,2 +1,10 @@
 .DS_Store
 static/.DS_Store
+.venv/
+runtime/
+.env*
+!.env.example
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.key
