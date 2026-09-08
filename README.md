@@ -1,50 +1,68 @@
-# Justynn Hammond - Data Scientist
+# Aera Operations — implementation v0.1
 
-Welcome to my online portfolio! I'm Justynn Hammond, a passionate and results-driven Data Scientist with a strong background in data analysis, programming, and data management. I am dedicated to transforming complex data into valuable insights that drive impactful business decisions.
+A local, single-owner backend for opportunity research and paperwork operations. Research
+may discover development, service, product, government, and fulfillment opportunities;
+every model-produced result remains an **unverified candidate**. Aera does not purchase,
+file, sign, contact, or certify anything.
 
-## About Me
+## Quick start
 
-Studying Data Analytics captivated me due to my passion for storytelling with data and the ability to provide insights into intriguing personal and business inquiries. As I transitioned from a professional athlete to pursuing a career as a Data Scientist, I found this field to be exceptionally valuable and relevant.
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
-I am a technology enthusiast driven by a passion for creativity, analytics, and problem-solving. With a keen interest in data analytics and programming, I have embraced these fields as both a personal passion and a valuable skill set applicable across various industries. The ability to utilize data to uncover meaningful patterns and trends and the power of programming to bring those insights to life are what truly excite me about the world of Data Analytics.
+```bash
+uv sync --frozen
+uv run aera init
+uv run aera demo
+uv run pytest -q
+uv run aera doctor
+```
 
-## Portfolio Overview
+Production data defaults to `runtime/aera.db`; the repeatable, synthetic demo uses
+`runtime/demo.db`. Runtime files, secrets, and private keys are ignored by Git.
 
-In this portfolio, you will find a showcase of some of my most exciting projects and accomplishments in the field of Data Science. I have carefully curated each project to highlight various aspects of data analysis, visualization, data science, and machine learning.
+## Owner API
 
-## Projects
+Set a random `AERA_OWNER_TOKEN` containing at least 32 characters, then run:
 
-### Project 1: Customer Segmentation for Marketing Strategy
+```bash
+uv run aera serve --port 8421
+```
 
-In this project, I leveraged unsupervised learning techniques to segment customers based on their behaviors and characteristics. The insights gained from this analysis helped the marketing team tailor their strategies to specific customer groups, resulting in increased customer engagement and sales.
+The server binds to `127.0.0.1`. `/health` is public; every other endpoint (including the
+private schema at `/schema`) requires `Authorization: Bearer <token>`. Do not put the token
+in a URL. This is a local single-operator application—not a public service.
 
-### Project 2: Predicting Loan Defaults with Machine Learning
+## Safety model
 
-For this project, I built a machine learning model to predict loan defaults for a financial institution. By analyzing historical loan data and employing classification algorithms, I created a predictive model that helps the institution identify high-risk loans and make informed decisions to minimize potential losses.
+- All money is integer US cents. Research requires an exact-payload approval, an unexpired
+  approval, a transactional budget reservation, and one-time queueing.
+- A reservation is an internal control, **not** a provider invoice ceiling. Failed calls
+  retain their reservations pending reconciliation; overruns pause spending.
+- Owner selection does not verify evidence. Paperwork contains only verified public business
+  fields and creates blockers for identity, tax, banking, and signature data.
+- Vault documents are Fernet-encrypted and only addressable by opaque IDs. The research
+  adapter and HTTP API have no vault access.
+- Daily scheduling deduplicates on the America/Denver calendar date. Expired running leases
+  are quarantined as `needs_review`, never silently replayed.
 
-### Project 3: Healthcare Data Analysis during the Pandemic
+## Live research
 
-During the 2020 pandemic, I worked as a Data Science Analytical Consultant at National Jewish Health. I was directly responsible for all data collection and systems processing of all analytical functions within the research data. Our models and datasets drove our research by empowering it to correctly identify the correct sequence of specimens we were sorting. The insights gained from this analysis played a crucial role in shaping healthcare responses during the pandemic.
+Live research is off by default. The adapter is optional and refuses to run unless
+`AERA_LIVE_RESEARCH=true` and `OPENAI_API_KEY` are present. Configure `AERA_MODEL` and
+provider-side billing controls before enabling it. Model candidates cannot set verified or
+selected status. The existing ChatGPT task scheduler is separate from this worker.
 
-### Project 4: Real-Time Transportation Analytics
+```bash
+uv run aera worker --loop
+```
 
-As a Rail Data Manager at OmniTRAX, I led the administration of successful customer setup and accurate contract submission. I also collaborated with the Operations and Commercial Team to ensure accurate and automated system administration while following Railroad Industry Rules and Regulations. In this project, I utilized SQL and Python to manage and update the database used to hold all the commodities going through OmniTRAX, enabling real-time analytics for transportation operations.
+See [`docs/api_examples.json`](docs/api_examples.json) for nonsensitive request shapes and
+[`src/aera/models.py`](src/aera/models.py) for schemas. Never submit personal identifiers in
+generic research queries or outcome observations.
 
-## Purpose and Value
+## Known limits
 
-Each project in this portfolio is a testament to my expertise in data science, showcasing how data-driven insights can drive business decisions, improve healthcare outcomes, and enhance transportation operations. By exploring these projects, you will gain valuable insights into my problem-solving approach, technical skills, and commitment to delivering impactful results.
-
-I invite you to explore the projects in detail and discover the value that data science can bring to your organization.
-
-Visit my full portfolio: [Justynn Hammond - Data Scientist](https://jhamm2315.github.io)
-Technologies:
-- Python
-- SQL
-- Tableau
-- Excel
-- VBA
-- HTML / CSS
-- MongoDB
-- APIs
-- KPIs
-- JavaScript
+No API key, deployment, transport, bank/wallet, sales worker, fulfillment worker, official
+form adapter, or legal filing integration is included. Inbox records are local notifications.
+SQLite itself is not encrypted and is intended for a single host. The application audit log
+is append-only through application methods but cannot resist a machine administrator.

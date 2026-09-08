@@ -1,0 +1,6 @@
+{
+  "opportunity": {"title":"Public website refresh","category":"development","summary":"Candidate requiring owner verification","source_url":"https://example.gov/opportunity","evidence":[]},
+  "research_request": {"query":"Find current public web development solicitations; exclude personal data","model":"configured-model","max_turns":3,"reservation_cents":250},
+  "policy": {"cash_buffer_cents":10000,"daily_limit_cents":500,"total_limit_cents":2000,"spending_paused":false},
+  "ledger": {"amount_cents":50000,"receipt_reference":"owner-bank-receipt-001","event_key":"deposit-001"}
+}
